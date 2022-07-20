@@ -1,8 +1,9 @@
 package framework
+
 /*
 web服务引擎
 
- */
+*/
 import (
 	"net/http"
 )
@@ -24,13 +25,15 @@ func (x *XEngine) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	uri := r.RequestURI
 	//用户请求上下文
 	ctx := &XContext{
-		request: r,
+		request:        r,
 		responseWriter: w,
+		logger:         NewLogger(),
 	}
+	ctx.logger.Info(ctx, "msg", "ee", "22", "33")
 	_ = ctx
 
 	//查找路由获取对应Handler处理请求
-	handlerFunc, err := x.Routers.FindHandlerFunc(httpMethod,uri)
+	handlerFunc, err := x.Routers.FindHandlerFunc(httpMethod, uri)
 	if err != nil {
 		//404
 	}
@@ -38,6 +41,7 @@ func (x *XEngine) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	handlerFunc(ctx)
 
 }
+
 //注册路由（GET,POST）
 func (x *XEngine) GET(url string, handlerFunc HandlerFunc) {
 	x.Routers.AddRouter("GET", url, handlerFunc)
@@ -45,8 +49,6 @@ func (x *XEngine) GET(url string, handlerFunc HandlerFunc) {
 func (x *XEngine) POST(url string, handlerFunc HandlerFunc) {
 	x.Routers.AddRouter("POST", url, handlerFunc)
 }
-
-
 
 //启动服务
 func (x *XEngine) Run(addr string) error {
