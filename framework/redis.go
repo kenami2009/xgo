@@ -22,7 +22,8 @@ func InitRedis() {
 		Addr: addr})
 	_, err = rdb.Ping().Result()
 	if err != nil {
-		log.Fatalln(err)
+		Redis = nil
+		return
 	}
 	Redis = rdb
 }
