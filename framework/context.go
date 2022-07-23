@@ -10,6 +10,8 @@ import (
 var jsonContentType = []string{"application/json; charset=utf-8"}
 
 type XContext struct {
+	index          int //中间件计数器
+	handlers       ControllerHandlerChain
 	request        *http.Request
 	responseWriter http.ResponseWriter
 	ctx            context.Context
@@ -17,6 +19,20 @@ type XContext struct {
 }
 
 var _ context.Context = &XContext{}
+
+func (x *XContext) Next() error {
+	x.index++
+	if len(x.handlers) > x.index {
+		if err := x.handlers[x.index](x); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (x *XContext) SetHandlers(handlers ControllerHandlerChain) {
+	x.handlers = handlers
+}
 
 func (x *XContext) BaseContext() context.Context {
 	return x.ctx
@@ -35,6 +51,7 @@ func (x *XContext) Err() error {
 }
 
 //json输出
+
 func (x *XContext) Json(httpStatus int, data interface{}) {
 	//TODO
 	r := x.responseWriter
