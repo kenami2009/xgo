@@ -19,6 +19,7 @@ var command = &cobra.Command{
 }
 
 func main() {
-	command.AddCommand(console.AppCommand)
+	command.AddCommand(console.AppCommand) //app控制台
+	command.AddCommand(console.DbCommand)  //数据迁移控制台
 	command.Execute()
 }

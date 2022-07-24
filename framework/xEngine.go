@@ -34,12 +34,10 @@ func (x *XEngine) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ctx := &XContext{
 		index:          -1,
 		handlers:       x.middlewares,
-		request:        r,
-		responseWriter: w,
+		Request:        r,
+		ResponseWriter: w,
 		logger:         NewLogger(),
 	}
-	ctx.logger.Info(ctx, "msg", "ee", "22", "33")
-	_ = ctx
 
 	//查找路由获取对应Handler处理请求
 	handlers, err := x.FindRouterHandlers(ctx)
@@ -69,8 +67,8 @@ func (x *XEngine) AddRouter(method, url string, chain ControllerHandlerChain) er
 
 //查找路由
 func (x *XEngine) FindRouterHandlers(ctx *XContext) (handlers ControllerHandlerChain, err error) {
-	httpMethod := ctx.request.Method
-	uri := ctx.request.RequestURI
+	httpMethod := ctx.Request.Method
+	uri := ctx.Request.RequestURI
 	tree, ok := x.Routers[httpMethod]
 	if !ok {
 		err = noDefineHttpMethod

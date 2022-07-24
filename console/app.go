@@ -35,6 +35,7 @@ var startAppCommand = &cobra.Command{
 		var x = framework.NewEngine()
 
 		x.Use(middleware.Recovery())
+		x.Use(middleware.Logger())
 
 		framework.InitDb()
 		framework.InitRedis()
