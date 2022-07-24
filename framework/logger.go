@@ -3,10 +3,12 @@ package framework
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"github.com/go-ini/ini"
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -36,12 +38,25 @@ func NewLogger() *Logger {
 	}
 	log_level := conf.Section("").Key("log_level").String()
 	log_path := conf.Section("").Key("log_path").String()
+	log_file := filepath.Join(GetExecDirectory(), log_path)
+	var out *os.File
+	if !Exists(log_file) {
+		if out, err = os.OpenFile(log_file, os.O_APPEND|os.O_CREATE, 0777); err != nil {
+			log.Fatalln(err)
+		}
+	} else {
+		//output
+		out, err = os.OpenFile(log_file, os.O_APPEND|os.O_CREATE, 0777)
+		if err != nil {
+			log.Fatalln()
+		}
+	}
+
 	level, ok := levelFlag[log_level]
 	if !ok {
 		log.Fatal("日志类型有误")
 	}
-	//output
-	out, err := os.Open(log_path)
+
 	if err != nil {
 		log.Fatal("日志文件创建错误", err)
 	}
@@ -120,7 +135,10 @@ func (l *Logger) logf(loglever LogLevel, ctx context.Context, msg ...string) (er
 		return
 	}
 	//输出
-	l.output.Write(r)
+	_, err = l.output.Write(r)
+	if err != nil {
+		fmt.Println(err)
+	}
 	l.output.Write([]byte("\r\n"))
 	return
 }

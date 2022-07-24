@@ -12,13 +12,19 @@ var jsonContentType = []string{"application/json; charset=utf-8"}
 type XContext struct {
 	index          int //中间件计数器
 	handlers       ControllerHandlerChain
-	request        *http.Request
-	responseWriter http.ResponseWriter
+	Request        *http.Request
+	ResponseWriter http.ResponseWriter
 	ctx            context.Context
 	logger         *Logger
 }
 
 var _ context.Context = &XContext{}
+
+func (x *XContext) Info(msg ...string) {
+	if x.logger != nil {
+		x.logger.Info(x, msg...)
+	}
+}
 
 func (x *XContext) Next() error {
 	x.index++
@@ -54,8 +60,8 @@ func (x *XContext) Err() error {
 
 func (x *XContext) Json(httpStatus int, data interface{}) {
 	//TODO
-	r := x.responseWriter
-	header := x.responseWriter.Header()
+	r := x.ResponseWriter
+	header := x.ResponseWriter.Header()
 
 	header["Content-Type"] = jsonContentType
 	r.WriteHeader(httpStatus)
