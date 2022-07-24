@@ -6,7 +6,6 @@
 
 ## 基础功能
 
-
 * 路由：使用字典树（trie）实现
 * 上下文：
 ```go
@@ -30,9 +29,9 @@ x.Use(middleware.Recovery())
 * gorm
 * redis
 * 日志
-* 命令行工具
+* 命令行工具(cobra)
 
-##使用指南
+## 使用指南
 
 ```
 git clone https://github.com/kenami2009/xgo.git
@@ -44,7 +43,7 @@ go test ./...
 go run ./main.go app start
 ```
 
-###数据库迁移
+## 数据库迁移
 ```
 //创建迁移文件
 xgo db create migrate
