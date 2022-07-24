@@ -1,6 +1,6 @@
 # golang project files
 .idea
-runtime
+runtime/app.log
 
 main.exe
 main
