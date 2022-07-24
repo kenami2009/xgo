@@ -1,4 +1,4 @@
-# go-start-kit框架
+# xgo框架
 
 ---
 
@@ -30,6 +30,19 @@ x.Use(middleware.Recovery())
 * redis
 * 日志
 * 命令行工具(cobra)
+```
+go run .\main.go -h
+xgo 框架提供的命令行工具
+
+Usage:
+  xgo [flags]
+  xgo [command]
+
+Available Commands:
+  app         app控制台
+  db          数据库迁移
+  help        Help about any command
+```
 
 ## 后续功能
 * 缓存服务
@@ -52,9 +65,11 @@ go run ./main.go app start
 
 ## 数据库迁移
 ```
+//初始化迁移版本表
+go run ./main.go db init
 //创建迁移文件
-xgo db create migrate
+go run ./main.go db generate create_table_users
 //执行迁移
-xgo db migrate
+go run ./main.go db migrate
 ```
 
