@@ -3,6 +3,9 @@ package console
 import (
 	"github.com/spf13/cobra"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 	"xgo/framework"
 	"xgo/framework/middleware"
 )
@@ -40,8 +43,26 @@ var startAppCommand = &cobra.Command{
 		framework.InitDb()
 		framework.InitRedis()
 
+		//处理消息goroutine
+		go func() {
+			framework.RunQueueServer()
+		}()
+
+		//TODO注册路由
 		x.GET("/", framework.IndexController)
-		log.Fatalln(x.Run(":8000"))
+
+		//启动http服务
+		go func() {
+			x.Run(":8000")
+		}()
+
+		// 当前的goroutine等待信号量
+		quit := make(chan os.Signal)
+		// 监控信号：SIGINT, SIGTERM, SIGQUIT
+		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+		// 这里会阻塞当前goroutine等待信号
+		<-quit
+
 		return nil
 	},
 }
