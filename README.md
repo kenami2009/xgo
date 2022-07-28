@@ -44,8 +44,9 @@ Available Commands:
   help        Help about any command
 ```
 
+* 消息队列 （asynq+redis）
+
 ## 后续功能
-* 消息队列
 * 缓存服务
 * 持续集成
 * 进程守护
